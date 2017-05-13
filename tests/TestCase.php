@@ -11,4 +11,12 @@ abstract class TestCase extends Laravel\Lumen\Testing\TestCase
     {
         return require __DIR__.'/../bootstrap/app.php';
     }
+
+    public function withoutMiddleware() {
+        $this->app->instance('middleware.disable', true);
+    }
+
+    public function withMiddleware() {
+        $this->app->instance('middleware.disable', false);
+    }
 }

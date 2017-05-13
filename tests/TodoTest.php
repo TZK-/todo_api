@@ -7,6 +7,12 @@ class TodoTest extends TestCase
 {
     use DatabaseTransactions;
 
+    public function setUp()
+    {
+        parent::setUp();
+        $this->withoutMiddleware();
+    }
+
     public function test_get_existing_todo_returns_its_informations()
     {
         $todo = factory(Todo::class)->create();
@@ -25,7 +31,8 @@ class TodoTest extends TestCase
             ->seeStatusCode(404);
     }
 
-    public function test_create_todo() {
+    public function test_create_todo()
+    {
         $data = [
             'title' => 'New todo',
             'description' => 'My super todo'
