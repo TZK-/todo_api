@@ -19,17 +19,21 @@ class TodoController extends Controller
     }
 
     public function index() {
-        return response()->json(Todo::all(), 200);
+        return response()->json($this->request->user()->todos, 200);
     }
 
     public function show($id) {
-        return response()->json(Todo::findOrFail($id), 200);
+        $todo = $this->request->user()->todos()
+            ->where('id', $id)
+            ->firstOrFail();
+
+        return response()->json($todo, 200);
     }
 
     public function create() {
         $this->validate($this->request, $this->rules);
 
-        return response()->json(Todo::create($this->request->all()), 201);
+        return response()->json($this->request->user()->todos()->create($this->request->all()), 201);
     }
 
     public function update($id) {
@@ -39,7 +43,7 @@ class TodoController extends Controller
         $todo->update($this->request->all());
         $todo->save();
 
-        return response()->json(Todo::create($this->request->all()), 200);
+        return response()->json($todo, 200);
     }
 
     public function delete($id) {

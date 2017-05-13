@@ -4,10 +4,10 @@ namespace App;
 
 use Carbon\Carbon;
 use Illuminate\Auth\Authenticatable;
-use Laravel\Lumen\Auth\Authorizable;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Database\Eloquent\Model;
+use Laravel\Lumen\Auth\Authorizable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract, JWTSubject
@@ -20,7 +20,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $fillable = [
-        'name', 'email',
+        'email',
     ];
 
     /**
@@ -51,5 +51,10 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         // The token expires in 24h
         return ['exp' => Carbon::now()->addDays(1)->timestamp];
+    }
+
+    public function todos()
+    {
+        return $this->hasMany(Todo::class);
     }
 }
