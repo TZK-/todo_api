@@ -57,4 +57,13 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         return $this->hasMany(Todo::class);
     }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        self::deleting(function (User $user) {
+            $user->todos()->delete();
+        });
+    }
 }

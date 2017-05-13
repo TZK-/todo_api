@@ -76,4 +76,5 @@ class TodoTest extends TestCase
 
         $this->notSeeInDatabase('todos', ['id' => $todo->id]);
     }
+
 }
