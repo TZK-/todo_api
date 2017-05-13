@@ -45,6 +45,11 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
-        return parent::render($request, $e);
+        if ($e instanceof ModelNotFoundException)
+        {
+            return response()->json(['message' => 'Record not found'], 404);
+        }
+
+        return response()->json(['message' => 'Internal Server Error'], 500);
     }
 }

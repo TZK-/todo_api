@@ -3,3 +3,5 @@
 .env.php
 .env
 .idea
+vendor
+android_todo_back.iml
