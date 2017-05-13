@@ -3,6 +3,8 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Validation\UnauthorizedException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -45,12 +47,25 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
+        if($request->isJson()) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], $this->getStatusCode($e));
+        }
+
         return parent::render($request, $e);
-//        if ($e instanceof ModelNotFoundException)
-//        {
-//            return response()->json(['message' => 'Record not found'], 404);
-//        }
-//
-//        return response()->json(['message' => 'Internal Server Error: ' . $e->getMessage()], 500);
+    }
+
+    protected function getStatusCode($e) {
+        switch ($e) {
+            case $e instanceof ModelNotFoundException:
+                return 404;
+
+            case $e instanceof AuthenticationException:
+                return 401;
+        }
+
+        return method_exists($e, 'getStatusCode') ? $e->getStatusCode() : 500;
     }
 }
