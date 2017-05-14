@@ -1,9 +1,12 @@
 <?php
 
+use App\User;
 use Illuminate\Support\Facades\Artisan;
 
 abstract class TestCase extends Laravel\Lumen\Testing\TestCase
 {
+    protected $user;
+
     /**
      * Creates the application.
      *
@@ -18,6 +21,9 @@ abstract class TestCase extends Laravel\Lumen\Testing\TestCase
     {
         parent::setUp();
         Artisan::call('migrate');
+
+        $this->user = factory(User::class)->create();
+        $this->actingAs($this->user);
     }
 
     public function withoutMiddleware() {

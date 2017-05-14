@@ -1,23 +1,9 @@
 <?php
 
 use App\Todo;
-use App\User;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 class TodoTest extends TestCase
 {
-    protected $user;
-    protected $headers;
-
-    public function setUp()
-    {
-        parent::setUp();
-
-        $this->user = factory(User::class)->create();
-        $this->headers = [
-            'Authorization' => 'Bearer ' . JWTAuth::fromUser($this->user)
-        ];
-    }
 
     public function test_get_existing_todo_returns_its_information()
     {
@@ -25,7 +11,7 @@ class TodoTest extends TestCase
             'user_id' => $this->user->id
         ]);
 
-        $this->json('GET', '/todos/' . $todo->id, [], $this->headers)
+        $this->json('GET', '/todos/' . $todo->id, [])
             ->seeStatusCode(200)
             ->seeJson([
                 'title' => $todo->title,
@@ -36,7 +22,7 @@ class TodoTest extends TestCase
 
     public function test_get_non_existing_todo_returns_error()
     {
-        $this->json('GET', '/todos/azeaze', [], $this->headers)
+        $this->json('GET', '/todos/azeaze', [])
             ->seeStatusCode(404);
     }
 
@@ -47,7 +33,7 @@ class TodoTest extends TestCase
             'description' => 'My super todo'
         ];
 
-        $this->json('POST', '/todos', $data, $this->headers)
+        $this->json('POST', '/todos', $data)
             ->seeStatusCode(201)
             ->seeJson($data);
 
@@ -58,7 +44,7 @@ class TodoTest extends TestCase
     {
         $todo = factory(Todo::class)->create();
 
-        $this->json('PUT', '/todos/' . $todo->id, ['title' => 'Updated'], $this->headers)
+        $this->json('PUT', '/todos/' . $todo->id, ['title' => 'Updated'])
             ->seeStatusCode(200);
 
         $updatedTodo = Todo::find($todo->id);
@@ -71,7 +57,7 @@ class TodoTest extends TestCase
     {
         $todo = factory(Todo::class)->create();
 
-        $this->json('DELETE', '/todos/' . $todo->id, [], $this->headers)
+        $this->json('DELETE', '/todos/' . $todo->id, [])
             ->seeStatusCode(204);
 
         $this->notSeeInDatabase('todos', ['id' => $todo->id]);
