@@ -18,4 +18,5 @@ $app->group(['middleware' => 'auth:api'], function ($app) {
 
 });
 
-$app->post('auth/login', 'AuthController@login');
+$app->post('login', 'AuthController@login');
+$app->post('register', 'AuthController@register');

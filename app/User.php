@@ -7,6 +7,7 @@ use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Hash;
 use Laravel\Lumen\Auth\Authorizable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
@@ -51,6 +52,10 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         // The token expires in 24h
         return ['exp' => Carbon::now()->addDays(1)->timestamp];
+    }
+
+    public function setPasswordAttribute($password) {
+        $this->attributes['password'] = Hash::make($password);
     }
 
     public function todos()
