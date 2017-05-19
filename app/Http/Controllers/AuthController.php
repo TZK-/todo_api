@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
@@ -10,25 +11,27 @@ use Tymon\JWTAuth\JWTAuth;
 
 class AuthController extends Controller
 {
+    protected $request;
+
     /**
      * @var \Tymon\JWTAuth\JWTAuth
      */
     protected $jwt;
 
-    public function __construct(JWTAuth $jwt)
+    public function __construct(Request $request, JWTAuth $jwt)
     {
         $this->jwt = $jwt;
     }
 
-    public function login(Request $request)
+    public function login()
     {
-        $this->validate($request, [
+        $this->validate($this->request, [
             'email' => 'required|email|max:255|exists:users,email',
             'password' => 'required',
         ]);
 
         try {
-            if (!$token = $this->jwt->attempt($request->only('email', 'password'))) {
+            if (!$token = $this->jwt->attempt($this->request->only('email', 'password'))) {
                 return response()->json(['user_not_found'], 404);
             }
         } catch (TokenExpiredException $e) {
@@ -55,6 +58,6 @@ class AuthController extends Controller
 
         $user->save();
 
-        return response()->json(['token' => JWTAuth::fromUser($user)], 200);
+        return response()->json(['token' => $this->jwt->fromUser($user)], 200);
     }
 }
