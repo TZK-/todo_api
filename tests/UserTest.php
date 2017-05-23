@@ -15,6 +15,6 @@ class UserTest extends TestCase
         $this->assertTrue($this->user->delete());
 
         $this->notSeeInDatabase('users', ['id' => $this->user->id]);
-        $this->notSeeInDatabase('todos', ['id' => $this->user->id]);
+        $this->notSeeInDatabase('todos', ['user_id' => $this->user->id]);
     }
 }
