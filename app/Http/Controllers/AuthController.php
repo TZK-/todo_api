@@ -21,6 +21,7 @@ class AuthController extends Controller
     public function __construct(Request $request, JWTAuth $jwt)
     {
         $this->jwt = $jwt;
+        $this->request = $request;
     }
 
     public function login()
