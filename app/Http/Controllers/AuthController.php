@@ -32,17 +32,20 @@ class AuthController extends Controller
 
         try {
             if (!$token = $this->jwt->attempt($this->request->only('email', 'password'))) {
-                return response()->json(['user_not_found'], 404);
+                return response()->json(['error' => 'user_not_found'], 404);
             }
         } catch (TokenExpiredException $e) {
-            return response()->json(['token_expired'], 500);
+            return response()->json(['error' => 'token_expired'], 401);
         } catch (TokenInvalidException $e) {
-            return response()->json(['token_invalid'], 500);
+            return response()->json(['error' => 'token_invalid'], 500);
         } catch (JWTException $e) {
-            return response()->json(['token_absent' => $e->getMessage()], 500);
+            return response()->json(['error' => 'token_absent'], 422);
         }
 
-        return response()->json(compact('token'));
+        return response()->json([
+            'token' => $token, 
+            'user' => User::where('email', $this->request->get('email'))->first()
+        ]);
     }
 
     public function register()
@@ -58,6 +61,6 @@ class AuthController extends Controller
 
         $user->save();
 
-        return response()->json(['token' => $this->jwt->fromUser($user)], 200);
+        return response()->json(['token' => $this->jwt->fromUser($user), 'user' => $user], 200);
     }
 }

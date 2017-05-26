@@ -51,7 +51,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function getJWTCustomClaims()
     {
         // The token expires in 24h
-        return ['exp' => Carbon::now()->addDays(1)->timestamp];
+        // return ['exp' => Carbon::now()->addDays(1)->timestamp];
+        return [];
     }
 
     public function setPasswordAttribute($password) {
