@@ -19,7 +19,17 @@ class TodoController extends Controller
     }
 
     public function index() {
-        return response()->json($this->request->user()->todos, 200);
+        $todos = $this->request->user()->todos();
+
+        if($this->request->get('filter_type') && $this->request->get('filter_value')) {
+            $todos = $todos->where(
+                $this->request->get('filter_type'),
+                'LIKE',
+                "%{$this->request->get('filter_value')}%"
+            );
+        }
+
+        return response()->json($todos->get(), 200);
     }
 
     public function show($id) {
