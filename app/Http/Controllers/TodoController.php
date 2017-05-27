@@ -19,7 +19,7 @@ class TodoController extends Controller
     }
 
     public function index() {
-        return response()->json(['todos' => $this->request->user()->todos], 200);
+        return response()->json($this->request->user()->todos, 200);
     }
 
     public function show($id) {
