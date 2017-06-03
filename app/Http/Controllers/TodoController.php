@@ -43,7 +43,10 @@ class TodoController extends Controller
     public function create() {
         $this->validate($this->request, $this->rules);
 
-        return response()->json($this->request->user()->todos()->create($this->request->all()), 201);
+        return response()->json(
+            $this->request->user()->todos()->create($this->request->all()), 
+            201
+        );
     }
 
     public function update($id) {
