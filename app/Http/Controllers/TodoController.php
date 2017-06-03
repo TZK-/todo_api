@@ -29,7 +29,7 @@ class TodoController extends Controller
             );
         }
 
-        return response()->json($todos->get(), 200);
+        return response()->json(["todos" => $todos->get()], 200);
     }
 
     public function show($id) {
