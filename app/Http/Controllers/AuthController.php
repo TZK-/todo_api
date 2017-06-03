@@ -33,12 +33,12 @@ class AuthController extends Controller
 
         try {
             if (!$token = $this->jwt->attempt($this->request->only('email', 'password'))) {
-                return response()->json(['error' => 'user_not_found'], 404);
+                return response()->json(['error' => 'user_not_found'], 401);
             }
         } catch (TokenExpiredException $e) {
             return response()->json(['error' => 'token_expired'], 401);
         } catch (TokenInvalidException $e) {
-            return response()->json(['error' => 'token_invalid'], 500);
+            return response()->json(['error' => 'token_invalid'], 400);
         } catch (JWTException $e) {
             return response()->json(['error' => 'token_absent'], 422);
         }
