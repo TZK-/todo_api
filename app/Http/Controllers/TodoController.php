@@ -28,6 +28,10 @@ class TodoController extends Controller
                 "%{$this->request->get('filter_value')}%"
             );
         }
+        
+        if($this->request->get('status') !== null) {
+            $todos->where('ended', $this->request->get('status')); 
+        }
 
         return response()->json(["todos" => $todos->get()], 200);
     }
