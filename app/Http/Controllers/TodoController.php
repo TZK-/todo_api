@@ -58,7 +58,7 @@ class TodoController extends Controller
 
         $todo = Todo::findOrFail($id);
         $todo->update($this->request->all());
-        $todo->save();
+        //$todo->save();
 
         return response()->json($todo, 200);
     }
