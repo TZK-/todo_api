@@ -54,7 +54,7 @@ class TodoController extends Controller
     }
 
     public function update($id) {
-        $this->validate($this->request, $this->rules);
+        //$this->validate($this->request, $this->rules);
 
         $todo = Todo::findOrFail($id);
         $todo->update($this->request->all());
